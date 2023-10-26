@@ -57,12 +57,12 @@ class Presentation():
         
         Args:
         - name (str): El nombre del archivo de la presentación. Por defecto es "my_presentation.pptx".
-
         Returns:
         - None
         """
         from pptx import Presentation
         self.presentation.save("./output/" + name)
+        # cuando exista la webapp, hay que mover ese decorador output del modulo al archivo app.py
 
     def create_photo_slide_cat(self):
         """
