@@ -62,7 +62,7 @@ class Presentation():
         - None
         """
         from pptx import Presentation
-        self.presentation.save(name)
+        self.presentation.save("./output/" + name)
 
     def create_photo_slide_cat(self):
         """
