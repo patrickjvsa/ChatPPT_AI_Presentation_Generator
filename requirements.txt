@@ -2,3 +2,5 @@ lxml==4.9.3
 Pillow==9.5.0
 python-pptx==0.6.22
 XlsxWriter==3.1.9
+langchain~=0.0.278
+python-dotenv~=1.0.0

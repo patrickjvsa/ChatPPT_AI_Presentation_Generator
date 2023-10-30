@@ -3,15 +3,27 @@ Este archivo contiene algunos modulos creados con el fin de trabajar con archivo
 Fue programado teniendo en mente su utilización en aplicaciones de IA.
 
 Author: Patrick Vásquez <pvasquezs@fen.uchile.cl>
-Date: 26/10/2023
+Date: 30/10/2023
 """
 
 class Presentation():
-    def __init__(self, title, author, template = "./templates/template.pptx"):
+    
+    def __init__(self, title, author, template = "template.pptx"):
+        """
+        Inicializa una nueva presentación.
+
+        Args:
+        - title (str): El título de la presentación.
+        - author (str): El autor de la presentación.
+        - template (str): La ruta al archivo de plantilla. Revisa dentro de la carpeta templates. Por defecto, "template.pptx".
+
+        Returns:
+        - None
+        """
         from pptx import Presentation
         self.title = title
         self.author = author
-        self.template = template
+        self.template = "./templates/" + template
         self.presentation = Presentation(template)
 
     def add_frontpage(self):
@@ -85,24 +97,65 @@ class Presentation():
         top = Inches(3)   # Ajusta la posición superior de la imagen
         width = Inches(4) # Ajusta el ancho de la imagen
         height = Inches(3) # Ajusta la altura de la imagen
-        image_path = "./photos/cat.jpg"  # Ruta a la imagen que deseas agregar
+        image_path = "./templates/cat.jpg"  # Ruta a la imagen que deseas agregar
         pic = slide.shapes.add_picture(image_path, left, top, width, height)
 
-        # Es necesario borrar las imagenes que se descarguen
+    def create_photo_and_text_slide(self, title, text, image_path = "./dataset/Image_1.jpg"):
+        """
+        Crea una diapositiva con una foto y un texto.
 
-def main():
-    print("Ejecutando programa principal...")
-    presentation = Presentation("Título", "Autor")
-    print("Plantilla cargada con éxito.")
-    presentation.add_frontpage()
-    print("Portada agregada con éxito.")
-    presentation.add_index("Índice")
-    print("Índice agregado con éxito.")
-    presentation.create_photo_slide_cat()
-    print("Gato agregado con éxito.")
-    presentation.save_presentation("my_presentation.pptx")
-    print("Presentación guardada con éxito.")
+        Args:
+        - title (str): El título de la diapositiva.
+        - text (str): El texto a agregar a la diapositiva.
+        - image_path (str): La ruta a la imagen que deseas agregar.
 
+        Returns:
+        - None
+        """
+        from pptx import Presentation
+        from pptx.util import Inches
+        slide_layout = self.presentation.slide_layouts[3]  
+        slide = self.presentation.slides.add_slide(slide_layout)
+
+        # añade el título
+        content_placeholder = slide.placeholders[0]
+        content_placeholder.text = title
+
+        # agrega una imagen a la diapositiva
+        left = Inches(2)  # Ajusta la posición izquierda de la imagen
+        top = Inches(3)   # Ajusta la posición superior de la imagen
+        width = Inches(4) # Ajusta el ancho de la imagen
+        height = Inches(3) # Ajusta la altura de la imagen
+
+        #agrega el texto
+        content_placeholder = slide.placeholders[2]
+        content_placeholder.text = text
+
+        pic = slide.shapes.add_picture(image_path, left, top, width, height)
+
+# Ejemplo de uso
 if __name__ == "__main__":
-    main()
+
+    import text_modules as tm
+
+    print("Ejecutando programa principal...")
+
+    query = 'pinguinos emperadores'
+    autor = 'Patrick Vásquez'
+
+    llm = tm.OpenAIChat.create_chat_model(system_message="Eres un experto en crear presentaciones. Genera un titulo para una presentación sobre " + query + ".")
+    titulo = llm.run(query)
+
+    presentation = Presentation(titulo, autor)
+
+    print("Plantilla cargada con éxito.")
+    
+    # presentation.add_frontpage()
+    # print("Portada agregada con éxito.")
+    # presentation.add_index("Índice")
+    # print("Índice agregado con éxito.")
+    # presentation.create_photo_slide_cat()
+    # print("Gato agregado con éxito.")
+    # presentation.save_presentation("my_presentation.pptx")
+    # print("Presentación guardada con éxito.")
 
