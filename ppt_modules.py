@@ -24,7 +24,7 @@ class Presentation():
         self.title = title
         self.author = author
         self.template = "./templates/" + template
-        self.presentation = Presentation(template)
+        self.presentation = Presentation(self.template)
 
     def add_frontpage(self):
         """
@@ -143,13 +143,13 @@ if __name__ == "__main__":
     query = 'pinguinos emperadores'
     autor = 'Patrick Vásquez'
 
-    llm = tm.OpenAIChat.create_chat_model(system_message="Eres un experto en crear presentaciones. Genera un titulo para una presentación sobre " + query + ".")
-    titulo = llm.run(query)
+    llm = tm.OpenAICompleter()
+    titulo = llm.complete_text("Genera un titulo para una presentación sobre " + query + ".")
 
     presentation = Presentation(titulo, autor)
 
     print("Plantilla cargada con éxito.")
-    
+
     # presentation.add_frontpage()
     # print("Portada agregada con éxito.")
     # presentation.add_index("Índice")
@@ -157,5 +157,5 @@ if __name__ == "__main__":
     # presentation.create_photo_slide_cat()
     # print("Gato agregado con éxito.")
     # presentation.save_presentation("my_presentation.pptx")
-    # print("Presentación guardada con éxito.")
+    # print("Presentación guardada con éxito.") 
 

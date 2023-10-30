@@ -319,4 +319,32 @@ class SimpleQuestionAnswer(StandardQA):
         chain = RetrievalQA.from_chain_type(llm=llm, retriever=retriever, chain_type='stuff')
         return chain.run(query)
 
+# Text completers
 
+class TextCompleter(ABC):
+
+    @abstractmethod
+    def complete_text():
+        """
+        Crea un modelo de completación de texto.
+        Debe ser implementado por las subclases con los métodos para cada modelo.
+        """
+        pass
+
+class OpenAICompleter(TextCompleter):
+    def complete_text(query, model="davinci"):
+        import os
+        import openai
+        from dotenv import load_dotenv, find_dotenv
+        load_dotenv(find_dotenv()) # read local .env file
+        openai.api_key  = os.environ['OPENAI_API_KEY']
+        messages = [{"text": query}]
+        response = openai.Completion.create(
+            engine=model,
+            prompt=messages,
+            max_tokens=100,
+            n=1,
+            stop=None,
+            temperature=0.5,
+        )
+        return response.choices[0].text
